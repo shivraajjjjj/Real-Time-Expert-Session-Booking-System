@@ -1,0 +1,12 @@
+# Real-Time Expert Session Booking System
+
+node_modules/
+dist/
+build/
+.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+package-lock.json
