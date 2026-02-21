@@ -1,14 +1,89 @@
 # Real-Time Expert Session Booking System
 
-A full-stack app for discovering experts, viewing available time slots, and booking sessions with real-time updates.
+A full-stack real-time expert session booking platform built with:
+
+- React (Frontend)
+
+- Node.js + Express (Backend)
+
+- MongoDB (Database)
+
+- Socket.io (Real-Time Updates)
+
+This system prevents double booking, supports pagination & filtering, and updates available slots instantly across connected clients
 
 ## Features
 
-- Expert discovery with search, category filter, and sorting (newest, rating, experience)
-- Expert detail view with live slot updates (Socket.IO)
-- Booking form with validation (name, email, phone, date, time, notes)
-- My Bookings lookup by email
-- Professional, responsive UI styled with Tailwind CSS
+### ✅Expert Listing
+
+- Pagination support
+
+- Filter by category
+
+- Search by name
+
+- Proper loading & error handling
+### ✅Expert Details
+- View expert details
+
+- Available slots grouped by date
+
+- Real-time slot updates when another user books
+### ✅Booking System
+- Name, Email, Phone, Date, Slot, Notes
+
+- Server-side validation
+
+- Prevents double booking (database-level protection)
+
+- Slot removed immediately after booking
+
+- Success & error responses handled properly
+###My Bookings
+
+- Fetch bookings by email
+
+- Booking status:
+
+    - Pending
+
+    - Confirmed
+
+    - Completed
+
+## 🔒Double Booking Prevention
+The system prevents race conditions using a compound unique index in MongoDB:
+```javascript
+{ expert: 1, date: 1, timeSlot: 1 }
+```
+Even if two users try to book the same slot at the same time:
+- One succeeds
+
+- One fails cleanly
+
+Database enforces consistency.
+
+## ⚡ Real-Time Updates
+Uses **Socket.io.**
+
+When a booking is created:
+
+1. Backend emits a slotBooked event
+
+2. Clients subscribed to that expert receive the update
+
+3. Slot is removed instantly in all open browsers
+
+**How to test real-time:**
+
+1. Open the same expert in two browser tabs
+
+2. Book a slot in one tab
+
+3. The slot disappears instantly in the other tab
+
+No page refresh required.
+
 
 ## Project Structure
 
@@ -94,8 +169,9 @@ Base URL: `http://localhost:<PORT>` (default `3000`)
 - Node.js 18+ (recommended)
 - MongoDB instance
 
-### Backend
+### Backend Setup
 
+**Install dependencies:**
 ```
 cd backend
 npm install
@@ -120,11 +196,19 @@ node server.js
 ```
 
 ### Frontend
-
+**Install dependencies:**
 ```
 cd frontend
 npm install
+```
+**Start Frontend:**
+```
 npm run dev
+```
+Make sure backend is running on the same port configured in:
+```
+src/services/api.js
+src/services/socket.js
 ```
 
 The UI will be available at the Vite dev server URL (typically `http://localhost:5173`).
